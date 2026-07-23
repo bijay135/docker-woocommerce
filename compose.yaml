@@ -1,0 +1,60 @@
+services:
+  nginx:
+    image: nginx:1.30.3
+    container_name: nginx
+    ports:
+      - ${NGINX_PORT}:80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${WOOCOMMERCE_DATA_DIR}:/var/www/woocommerce
+    depends_on:
+      - fpm
+
+  fpm:
+    build: ./fpm
+    image: woocommerce:php8.4-fpm
+    container_name: fpm
+    volumes:
+      - ./fpm/php-fpm.ini:/usr/local/etc/php/conf.d/php-fpm.ini:ro
+      - ./fpm/www2.conf:/usr/local/etc/php-fpm.d/www2.conf:ro
+      - ${WOOCOMMERCE_DATA_DIR}:/var/www/woocommerce
+    user: ${UID}:${GID} # For data sharing with host
+    extra_hosts:
+      - "localhost.test:host-gateway" # For api/loopback issues
+    depends_on:
+      - mariadb
+
+  cli:
+    build: ./cli
+    image: woocommerce:php8.4-cli
+    container_name: cli
+    working_dir: /var/www/woocommerce
+    stdin_open: true
+    tty: true
+    environment:
+      HOST_USER: ${USER} # For admin creation
+      DB_HOST: mariadb:${MARIADB_PORT}
+      DB_NAME: ${MARIADB_DATABASE}
+      DB_USER: ${MARIADB_USER}
+      DB_PASSWORD: ${MARIADB_PASSWORD}
+      WP_CLI_CACHE_DIR: /tmp/.wp-cli/cache # For cli cache issue
+    volumes:
+      - ./cli/php-cli.ini:/usr/local/etc/php/conf.d/php-cli.ini:ro
+      - ${HOME}/.wp-cli/cache:/tmp/.wp-cli/cache
+      - ${WOOCOMMERCE_DATA_DIR}:/var/www/woocommerce
+    user: ${UID}:${GID} # For data sharing with host
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:12.3.2
+    container_name: mariadb
+    ports:
+      - ${MARIADB_PORT}:3306
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - ${MARIADB_DATA_DIR}:/var/lib/mysql
