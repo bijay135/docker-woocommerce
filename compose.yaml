@@ -38,9 +38,11 @@ services:
       DB_USER: ${MARIADB_USER}
       DB_PASSWORD: ${MARIADB_PASSWORD}
       WP_CLI_CACHE_DIR: /tmp/.wp-cli/cache # For cli cache issue
+      COMPOSER_HOME: /tmp/.composer
     volumes:
       - ./cli/php-cli.ini:/usr/local/etc/php/conf.d/php-cli.ini:ro
       - ${HOME}/.wp-cli/cache:/tmp/.wp-cli/cache
+      - ${HOME}/.composer:/tmp/.composer
       - ${WOOCOMMERCE_DATA_DIR}:/var/www/woocommerce
     user: ${UID}:${GID} # For data sharing with host
     depends_on:
