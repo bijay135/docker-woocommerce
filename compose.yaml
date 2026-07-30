@@ -32,7 +32,6 @@ services:
     stdin_open: true
     tty: true
     environment:
-      HOST_USER: ${USER} # For admin creation
       DB_HOST: mariadb:${MARIADB_PORT}
       DB_NAME: ${MARIADB_DATABASE}
       DB_USER: ${MARIADB_USER}
