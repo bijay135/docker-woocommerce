@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:1.30.3
+    image: nginx:stable
     container_name: nginx
     ports:
       - ${NGINX_PORT}:80
@@ -12,7 +12,7 @@ services:
 
   fpm:
     build: ./fpm
-    image: woocommerce:php8.4-fpm
+    image: woocommerce:php8.5-fpm
     container_name: fpm
     volumes:
       - ./fpm/php-fpm.ini:/usr/local/etc/php/conf.d/php-fpm.ini:ro
@@ -26,7 +26,7 @@ services:
 
   cli:
     build: ./cli
-    image: woocommerce:php8.4-cli
+    image: woocommerce:php8.5-cli
     container_name: cli
     working_dir: /var/www/woocommerce
     stdin_open: true
@@ -37,7 +37,7 @@ services:
       DB_USER: ${MARIADB_USER}
       DB_PASSWORD: ${MARIADB_PASSWORD}
       WP_CLI_CACHE_DIR: /tmp/.wp-cli/cache # For cli cache issue
-      COMPOSER_HOME: /tmp/.composer
+      COMPOSER_HOME: /tmp/.composer # For cli cache issue
     volumes:
       - ./cli/php-cli.ini:/usr/local/etc/php/conf.d/php-cli.ini:ro
       - ${HOME}/.wp-cli/cache:/tmp/.wp-cli/cache
@@ -48,7 +48,7 @@ services:
       - mariadb
 
   mariadb:
-    image: mariadb:12.3.2
+    image: mariadb:lts
     container_name: mariadb
     ports:
       - ${MARIADB_PORT}:3306

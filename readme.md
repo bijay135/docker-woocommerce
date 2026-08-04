@@ -46,7 +46,7 @@ woocommerce_stack up -d
 woocommerce_stack ps
 woocommerce_stack logs
 ```
-- Folders for `persistent cache` will be auto created on host
+- Folders for cli `persistent cache` will be auto created on host
 ```
 ${HOME}/.wp-cli/cache | ${HOME}/.composer
 ```
