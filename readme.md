@@ -85,9 +85,8 @@ UPDATE wp_options SET option_value = 'http://localhost.test' WHERE option_name =
   ],
   "require": {
     "composer/installers": "^2.2",
-    "roots/wordpress": "^6.8",
-    "wp-theme/twentytwentyfive": "^1.5",
-    "wp-plugin/akismet": "^5.7"
+    "roots/wordpress": "^7.0",
+    "wp-theme/twentytwentyfive": "^1.5"
   },
   "config": {
     "allow-plugins": {
@@ -123,7 +122,8 @@ cli_wp core install --url="http://localhost.test" --title="localhost.test" \
 ```
 - Install woocommerce with other plugins and activate all
 ```
-cli_composer require wp-plugin/woocommerce wp-plugin/disable-emails
+cli_composer require wp-plugin/woocommerce
+cli_composer require --dev wp-plugin/disable-emails
 cli_wp plugin activate --all
 ```
 - Navigate to `localhost.test/wp-admin` in your browser, login window will load
