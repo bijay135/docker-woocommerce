@@ -5,7 +5,7 @@ RUN curl -sSLf https://github.com/mlocati/docker-php-extension-installer/release
     -o /usr/local/bin/install-php-extensions && chmod +x /usr/local/bin/install-php-extensions \
 \
 # Install required php extensions
- && install-php-extensions mysqli \
+ && install-php-extensions mysqli gd imagick \
 \
 # Install required system packages
  && apt-get update && apt-get install --no-install-recommends -y unzip \
